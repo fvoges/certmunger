@@ -7,9 +7,11 @@ then
 fi
 
 
-CERTNAME="$(basename $1 .pfx)"
+CERTNAME="$(dirname $1)/$(basename $1 .pfx)"
+CERTPASS="$(basename $1 .pfx)"
 
-openssl pkcs12 -in ${CERTNAME}.pfx -passin pass:${CERTNAME} -out ${CERTNAME}.key.pem -nocerts -nodes
-openssl pkcs12 -in ${CERTNAME}.pfx -passin pass:${CERTNAME} -out ${CERTNAME}.crt.pem -clcerts -nodes -nokeys
-openssl pkcs12 -in ${CERTNAME}.pfx -passin pass:${CERTNAME} -out ${CERTNAME}.ca.pem -cacerts -nodes -nokeys
+openssl pkcs12 -in ${CERTNAME}.pfx -passin pass:${CERTPASS} -out ${CERTNAME}.key.pem -nocerts -nodes
+openssl pkcs12 -in ${CERTNAME}.pfx -passin pass:${CERTPASS} -out ${CERTNAME}.crt.pem -clcerts -nodes -nokeys
+openssl pkcs12 -in ${CERTNAME}.pfx -passin pass:${CERTPASS} -out ${CERTNAME}.ca.pem -cacerts -nodes -nokeys
+openssl rsa -in ${CERTNAME}.key.pem -out ${CERTNAME}.pubkey.pem -pubout
 
